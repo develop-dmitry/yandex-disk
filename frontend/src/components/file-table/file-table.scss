@@ -1,0 +1,30 @@
+.file-table {
+  margin-top: 40px;
+  &-row {
+    display: grid;
+    grid-template-columns: repeat(3, 33.33%);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+    border: 1px solid #1571bf;
+    border-top: 0;
+    &:last-child {
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    &__header {
+      grid-template-columns: repeat(3, 33.33%);
+      background: #1571bf;
+      color: #ffffff;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      overflow: hidden;
+      border: 0;
+    }
+  }
+  &-item {
+    padding: 10px;
+    font-size: 16px;
+  }
+}

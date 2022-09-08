@@ -26,7 +26,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.css$/,
+                test: /\.(scss|css)$/,
                 use: [
                     'style-loader',
                     'css-loader',
