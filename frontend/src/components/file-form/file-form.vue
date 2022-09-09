@@ -1,9 +1,9 @@
 <template>
   <form action="#">
-    <button class="button" @click="selectFile">{{ fileText }}</button>
+    <button class="button" @click.prevent="selectFile">{{ fileText }}</button>
     <input type="file" id="file" ref="file" v-on:change="fileUpload()" v-show="false">
     <div class="form-error" data-role="form-error" v-show="isShowMessage">Ошибка</div>
-    <button class="button button__margin" v-show="file">Загрузить</button>
+    <button class="button button__margin" v-show="file" @click.prevent="upload">Загрузить</button>
   </form>
 </template>
 
@@ -21,6 +21,9 @@
       }
     },
     methods: {
+      upload() {
+        console.log("upload...");
+      },
       selectFile() {
         document.querySelector("#file").click();
       },
