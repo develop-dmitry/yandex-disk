@@ -4,11 +4,11 @@ const {VueLoaderPlugin} = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'main.js'
+        filename: 'assets/js/main.js'
     },
     plugins: [
         new BrowserSyncPlugin({
@@ -21,12 +21,12 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './src/index.html'
         }),
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
     ],
     module: {
         rules: [
             {
-                test: /\.css$/,
+                test: /\.(scss|css)$/,
                 use: [
                     'style-loader',
                     'css-loader',
@@ -41,9 +41,10 @@ module.exports = {
             },
             {
                 test: /\.vue$/,
-                use: [
-                    'vue-loader'
-                ]
+                loader: 'vue-loader',
+                options: {
+                    extractCSS: true
+                }
             },
         ]
     }
