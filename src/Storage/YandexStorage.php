@@ -40,16 +40,18 @@ class YandexStorage implements StorageInterface
                 $files[] = [
                     "name" => $file["name"],
                     "path" => $file["path"],
-                    "created" => $file["created"]
+                    "created" => date("d.m.Y H:i:s", strtotime($file["created"]))
                 ];
             }
         }
         return $files;
     }
 
-    public function uploadFile()
+    public function uploadFile(string $path): array
     {
-        // TODO: Implement uploadFile() method.
+        $resources = $this->storage->getResource("/");
+        $resources->upload($path);
+        return [];
     }
 
     public function deleteFile()

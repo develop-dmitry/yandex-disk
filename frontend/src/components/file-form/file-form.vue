@@ -10,6 +10,8 @@
 <style lang="scss" src="./file-form.scss"></style>
 
 <script>
+  import Axios from "axios";
+
   export default {
     name: "file-form",
     data: () => {
@@ -22,7 +24,18 @@
     },
     methods: {
       upload() {
-        console.log("upload...");
+        let formData = new FormData();
+        formData.append("file", this.file);
+        formData.append("action", "upload_file")
+        Axios.post(
+          "/ajax.php",
+          formData,
+          {
+            'Content-Type': 'multipart/form-data'
+          }
+        ).then(response => {
+          console.log(response);
+        })
       },
       selectFile() {
         document.querySelector("#file").click();

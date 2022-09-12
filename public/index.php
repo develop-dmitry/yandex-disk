@@ -1,4 +1,4 @@
-<?php require_once "../vendor/autoload.php"; ?>
+<?php require_once __DIR__ . "/functions.php" ?>
 
 <!doctype html>
 <html lang="ru">
@@ -14,7 +14,6 @@
     <script defer src="assets/js/main.js"></script></head>
 <body>
     <div id="app">
-        <files></files>
     </div>
 </body>
 </html>
