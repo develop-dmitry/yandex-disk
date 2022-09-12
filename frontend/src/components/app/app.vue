@@ -1,39 +1,16 @@
 <template>
-  <div class="files">
-    <div class="container">
-      <file-form></file-form>
-      <file-table :files="files"></file-table>
-    </div>
-  </div>
+    <files></files>
 </template>
 
 <style lang="scss" src="./app.scss"></style>
 
 <script>
-  import FileTable from "../file-table/file-table.vue";
-  import FileForm from "../file-form/file-form.vue";
+  import Files from "../files/files.vue";
 
   export default {
     name: "App",
     components: {
-      FileTable,
-      FileForm
+      Files
     },
-    data: () => {
-      return {
-        files: [
-          {
-            title: "test.png",
-            owner: "Дмитрий К.",
-            size: "35 КБ"
-          },
-          {
-            title: "test.png",
-            owner: "Дмитрий К.",
-            size: "35 КБ"
-          }
-        ]
-      }
-    }
   }
 </script>

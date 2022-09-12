@@ -2,13 +2,13 @@
 
 namespace App\Storage;
 
-use Symfony\Component\Dotenv\Dotenv;
+use App\Helper\EnvHelper;
 
 class StorageBuilder
 {
     private static StorageInterface $storage;
 
-    public static function getStorage(): StorageInterface | null
+    public static function getStorage(): StorageInterface|null
     {
         if (!isset(self::$storage)) {
             self::createStorage();
@@ -27,6 +27,6 @@ class StorageBuilder
 
     private static function getStorageType(): string
     {
-        return "yandex";
+        return EnvHelper::getInstance()->get("storage_type");
     }
 }

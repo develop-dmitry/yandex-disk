@@ -13,6 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script defer src="assets/js/main.js"></script></head>
 <body>
-    <div id="app"></div>
+    <div id="app">
+        <files></files>
+    </div>
 </body>
 </html>
