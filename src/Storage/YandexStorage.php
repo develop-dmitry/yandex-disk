@@ -3,7 +3,8 @@
 namespace App\Storage;
 
 use App\Helper\EnvHelper;
-use Arhitector\Yandex\Client\OAuth;
+use App\Helper\FileHelper;
+use Arhitector\Yandex\Disk\Resource\Closed;
 use Arhitector\Yandex\Disk;
 use Exception;
 
@@ -24,43 +25,70 @@ class YandexStorage implements StorageInterface
         $this->storage = new Disk($token);
     }
 
-    public function getFiles(): array
-    {
-        return $this->getFilesFromDir("/");
-    }
 
-    private function getFilesFromDir(string $path): array
+    public function getFiles(int $limit = 20, int $offset = 0): array
     {
         $files = [];
-        foreach ($this->storage->getResource($path)->items as $file) {
-            $file = $file->toArray();
-            if ($file["type"] == "dir") {
-                $files = array_merge($files, $this->getFilesFromDir($file["path"]));
-            } else {
-                $files[] = [
-                    "name" => $file["name"],
-                    "path" => $file["path"],
-                    "created" => date("d.m.Y H:i:s", strtotime($file["created"]))
-                ];
-            }
+        foreach ($this->storage->getResources($limit, $offset)->setSort("created", true) as $resource) {
+            $files[] = $this->getFileArrFromResource($resource);
         }
         return $files;
     }
 
-    public function uploadFile(string $path): array
+    public function uploadFile(string $path): array|false
     {
-        $resources = $this->storage->getResource("/");
-        $resources->upload($path);
-        return [];
+        $resource = $this->storage->getResource(basename($path));
+        return ($resource->upload($path, true)) ? $this->getFileArrFromResource($resource) : false;
     }
 
-    public function deleteFile()
+    public function deleteFile(string $path): bool
     {
-        // TODO: Implement deleteFile() method.
+        return $this->storage->getResource($path)->delete(true);
     }
 
-    public function downloadFile()
+    public function downloadFile(string $path): string|false
     {
-        // TODO: Implement downloadFile() method.
+        $resource = $this->storage->getResource($path);
+        if (!$resource->has()) {
+            return false;
+        }
+
+        $path = FileHelper::getTmpPath()."/".$resource->get("name");
+        if ($resource->download($_SERVER["DOCUMENT_ROOT"].$path, true) !== false) {
+            return $path;
+        }
+
+        return false;
+    }
+
+    public function renameFile(string $path, string $name): array|false
+    {
+        $resource = $this->storage->getResource($path);
+        if (!$resource->has()) {
+            return false;
+        }
+
+        $newPath = dirname($path)."/".$name;
+        try {
+            $resource->move($newPath);
+            return $this->getFileArrFromResource($resource);
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public function getFilesCount(): int
+    {
+        return $this->storage->getResources()->count();
+    }
+
+    private function getFileArrFromResource(Closed $resource): array
+    {
+        $file = $resource->toArray();
+        return [
+            "name" => $file["name"],
+            "path" => $file["path"],
+            "created" => date("d.m.Y H:i:s", strtotime($file["created"]))
+        ];
     }
 }

@@ -4,13 +4,13 @@ namespace App\Router\Ajax;
 
 use App\Storage\StorageBuilder;
 
-class GetFilesAjaxHandler implements AjaxHandlerInterface
+class GetFilePagesAjaxHandler implements AjaxHandlerInterface
 {
     public function run(array $params): array
     {
         return [
             "result" => true,
-            "items" => StorageBuilder::getStorage()->getFiles($params["limit"], $params["offset"])
+            "pages" => ceil(StorageBuilder::getStorage()->getFilesCount() / $params["limit"])
         ];
     }
 }

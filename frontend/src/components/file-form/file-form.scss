@@ -20,6 +20,14 @@
     color: #ffffff;
     cursor: pointer;
   }
+  &[disabled] {
+    background: #ccc;
+    color: #000;
+    border-color: #ccc;
+    &:hover {
+      pointer-events: none;
+    }
+  }
   &__margin {
     margin-top: 15px;
   }

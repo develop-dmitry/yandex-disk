@@ -1,9 +1,7 @@
 <template>
   <form action="#">
-    <button class="button" @click.prevent="selectFile">{{ fileText }}</button>
-    <input type="file" id="file" ref="file" v-on:change="fileUpload()" v-show="false">
-    <div class="form-error" data-role="form-error" v-show="isShowMessage">Ошибка</div>
-    <button class="button button__margin" v-show="file" @click.prevent="upload">Загрузить</button>
+    <file-input @error="errorHandler" @select-file="selectFile"  :reset="!isUpload" :exclude-extension="['.exe', '.sh']" :input-id="'file'" :max-size="10"></file-input>
+    <button class="button button__margin" v-show="file" @click.prevent="upload" :disabled="isUpload">{{ uploadButtonText }}</button>
   </form>
 </template>
 
@@ -11,19 +9,32 @@
 
 <script>
   import Axios from "axios";
+  import FileInput from "../file-input/file-input.vue";
 
   export default {
     name: "file-form",
+    components: {
+      FileInput
+    },
     data: () => {
       return {
-        isShowMessage: false,
+        isUpload: false,
         file: "",
-        fileText: "",
-        excludeExtension: [".exe", ".sh"]
       }
+    },
+    emits: [
+      "file-upload",
+      "error"
+    ],
+    computed: {
+      uploadButtonText: function () {
+        return (this.isUpload) ? "Загрузка..." : "Загрузить файл";
+      },
     },
     methods: {
       upload() {
+        this.hideMessage();
+        this.isUpload = true;
         let formData = new FormData();
         formData.append("file", this.file);
         formData.append("action", "upload_file")
@@ -34,53 +45,32 @@
             'Content-Type': 'multipart/form-data'
           }
         ).then(response => {
-          console.log(response);
-        })
+            if (response.data.result) {
+              this.$emit("file-upload");
+              this.$emit("error", {
+                message: "Файл успешно загружен",
+                error: false
+              })
+            } else {
+              this.$emit("error", {
+                message: response.data.message
+              })
+            }
+            this.isUpload = false;
+          })
       },
-      selectFile() {
-        document.querySelector("#file").click();
+
+      selectFile(file) {
+        this.file = file;
       },
-      fileUpload() {
-        this.hideMessage();
-        if (this.checkFile(this.$refs.file.files[0].name)) {
-          this.file = this.$refs.file.files[0];
-          this.setButtonTextAsFileName();
-        } else {
-          this.showMessage("Запрещенное расширение файла");
-          this.resetFile();
-        }
-      },
-      checkFile(fileName) {
-        let res = false;
-        let extension = fileName.match(/\.\w+$/i);
-        if (extension != null) {
-          if (this.excludeExtension.indexOf(extension[0]) === -1) {
-            res = true;
-          }
-        }
-        return res;
-      },
-      showMessage(message) {
-        this.isShowMessage = true;
-        document.querySelector("[data-role=form-error]").innerText = message;
-      },
+
       hideMessage() {
-        this.isShowMessage = false;
+        this.$emit("error", {show: false});
       },
-      resetFile() {
-        document.querySelector("#file").value = "";
-        this.file = "";
-        this.setButtonDefaultText();
-      },
-      setButtonDefaultText() {
-        this.fileText = "Выбрать файл";
-      },
-      setButtonTextAsFileName() {
-        this.fileText = this.file.name;
+
+      errorHandler(params) {
+        this.$emit("error", params);
       }
     },
-    created() {
-      this.setButtonDefaultText();
-    }
   }
 </script>

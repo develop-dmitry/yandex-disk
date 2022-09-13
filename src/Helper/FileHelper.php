@@ -4,25 +4,21 @@ namespace App\Helper;
 
 class FileHelper
 {
-    private static FileHelper $helper;
-    private string $filePath;
+    private static string $imagesTmpPath = "/uploads/tmp";
 
-    private function __construct()
+    public static function clearTmp(): void
     {
-        $this->filePath = dirname($_SERVER["DOCUMENT_ROOT"], 1) . "/storage/uploads/";
-    }
-
-    public static function getInstance(): FileHelper
-    {
-        if (!isset(self::$helper)) {
-            self::$helper = new FileHelper();
+        $files = glob($_SERVER["DOCUMENT_ROOT"].self::$imagesTmpPath."/*");
+        foreach ($files as $file) {
+            unlink($file);
         }
-        return self::$helper;
     }
 
-    public function uploadFile(array $file): string|false
+    public static function getTmpPath(): string
     {
-        $newPath = $this->filePath . basename($file["name"]);
-        return (move_uploaded_file($file["tmp_name"], $newPath)) ? $newPath : false;
+        if (!file_exists($_SERVER["DOCUMENT_ROOT"].self::$imagesTmpPath)) {
+            mkdir($_SERVER["DOCUMENT_ROOT"].self::$imagesTmpPath);
+        }
+        return self::$imagesTmpPath;
     }
 }

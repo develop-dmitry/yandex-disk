@@ -10,15 +10,20 @@ class UploadFileAjaxHandler implements AjaxHandlerInterface
 {
     public function run(array $params): array
     {
+        $result = [
+            "result" => false,
+            "message" => "Не удалось загрузить файл"
+        ];
         if (isset($params["file"])) {
-            if ($path = $this->uploadFile($params["file"])) {
-                StorageBuilder::getStorage()->uploadFile($path);
+            $path = dirname($params["file"]["tmp_name"])."/".$params["file"]["name"];
+            rename($params["file"]["tmp_name"], $path);
+            if ($uploadedFile = StorageBuilder::getStorage()->uploadFile($path)) {
+                $result = [
+                    "result" => true,
+                    "item" => $uploadedFile
+                ];
             }
         }
-    }
-
-    private function uploadFile(array $file): string|false
-    {
-        return FileHelper::getInstance()->uploadFile($file);
+        return $result;
     }
 }

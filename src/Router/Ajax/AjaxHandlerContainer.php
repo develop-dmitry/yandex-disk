@@ -12,6 +12,11 @@ class AjaxHandlerContainer
     {
         $this->addHandler(GetFilesAjaxHandler::class, "get_files");
         $this->addHandler(UploadFileAjaxHandler::class, "upload_file");
+        $this->addHandler(DownloadFileAjaxHandler::class, "download_file");
+        $this->addHandler(DeleteFileAjaxHandler::class, "delete_file");
+        $this->addHandler(GetFilePagesAjaxHandler::class, "get_file_pages");
+        $this->addHandler(ClearTmpAjaxHandler::class, "clear_tmp");
+        $this->addHandler(RenameFileAjaxHandler::class, "rename_file");
     }
 
     public static function getInstance(): AjaxHandlerContainer
