@@ -16,6 +16,11 @@ class EnvHelper
         $this->dotenv->load($envPath);
     }
 
+    /**
+     * Получает объекта EnvHelper
+     *
+     * @return EnvHelper
+     */
     public static function getInstance(): EnvHelper
     {
         if (!isset(self::$helper)) {
@@ -24,6 +29,12 @@ class EnvHelper
         return self::$helper;
     }
 
+    /**
+     * Получает значение переменной из .env файла
+     *
+     * @param string $name
+     * @return string|false
+     */
     public function get(string $name): string|false
     {
         if (isset($_ENV[$name])) {

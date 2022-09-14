@@ -4,6 +4,12 @@ namespace App\Ajax;
 
 class Ajax
 {
+    /**
+     * Запускает обработку запроса
+     *
+     * @param array $request
+     * @return string
+     */
     public static function run(array $request): string
     {
         if ($handler = AjaxHandlerContainer::getInstance()->get($request["action"])) {
