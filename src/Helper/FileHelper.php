@@ -42,7 +42,7 @@ class FileHelper
         $directories = explode("/", self::$tmpPath);
         $path = $_SERVER["DOCUMENT_ROOT"];
         foreach ($directories as $directory) {
-            $path .= "/".$directory;
+            $path .= "/" . $directory;
             if (!file_exists($path)) {
                 mkdir($path);
             }
