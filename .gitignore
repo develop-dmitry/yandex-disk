@@ -1,3 +1,6 @@
-frontend/dist
-.idea
-frontend/node_modules
+/frontend/dist
+/.idea
+/frontend/node_modules
+/vendor/
+/.env
+/public/uploads/tmp

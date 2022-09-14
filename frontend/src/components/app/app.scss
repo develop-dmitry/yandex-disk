@@ -8,6 +8,70 @@ body {
   margin: 0 auto;
 }
 
-.files {
-  padding: 100px 0;
+.alert {
+  padding: 15px;
+  font-size: 16px;
+  width: 100%;
+  border: 1px solid #1571bf;
+  border-radius: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  &__info {
+    background: #1571bf;
+    color: #ffffff;
+  }
+  &__warning {
+    background: #bd1010;
+    color: #ffffff;
+    border-color: #bd1010;
+  }
+  &__margin-bottom {
+    margin-bottom: 15px;
+  }
+  &__margin-top {
+    margin-top: 15px;
+  }
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  padding: 0;
+  border: none;
+  &:hover {
+    cursor: pointer;
+  }
+  &-image {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.button {
+  width: 100%;
+  background: transparent;
+  border: 1px solid #1571bf;
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 15px;
+  transition: .2s;
+  &:hover {
+    background: #1571bf;
+    color: #ffffff;
+    cursor: pointer;
+  }
+  &[disabled] {
+    background: #ccc;
+    color: #000;
+    border-color: #ccc;
+    &:hover {
+      pointer-events: none;
+    }
+  }
+  &__margin {
+    margin-top: 15px;
+  }
 }
