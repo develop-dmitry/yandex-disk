@@ -1,12 +1,22 @@
 <template>
   <div class="files">
     <div class="container">
-      <div class="alert alert__margin-bottom" :class="{'alert__info': !errorMessage, 'alert__warning': errorMessage}" v-if="showMessage">
+      <div class="alert alert__margin-bottom"
+           :class="{'alert__info': !errorMessage, 'alert__warning': errorMessage}"
+           v-if="showMessage">
         {{ message }}
       </div>
-      <file-form @file-upload="getFiles" @error="errorHandler"></file-form>
-      <file-table @file-delete="getFiles" @file-rename="getFiles" @error="errorHandler" :files="items"></file-table>
-      <pagination :pages="this.pages" :current-page="offset / limit" @select-page="changePage"></pagination>
+      <file-form
+          @file-upload="changeFileCount"
+          @error="errorHandler"></file-form>
+      <file-table
+          @file-delete="changeFileCount"
+          @file-rename="getFiles"
+          @error="errorHandler"
+          :files="items"></file-table>
+      <pagination :pages="this.pages"
+                  :current-page="offset / limit"
+                  @select-page="changePage"></pagination>
     </div>
   </div>
 </template>
@@ -28,7 +38,7 @@ export default {
   },
   data: () => {
     return {
-      limit: 4,
+      limit: 20,
       offset: 0,
       pages: 0,
       currentPage: 1,
@@ -64,7 +74,10 @@ export default {
               created: value.created
             };
           })
-          this.getPages();
+        } else {
+          this.errorHandler({
+            message: response.data.message
+          })
         }
       })
     },
@@ -85,14 +98,20 @@ export default {
       })
     },
 
+    changeFileCount() {
+      this.getFiles();
+      this.getPages();
+    },
+
     changePage(page) {
       this.offset = this.limit * page - this.limit;
       this.getFiles();
       this.currentPage = page;
     }
   },
+
   created() {
-    this.getFiles();
+    this.changeFileCount();
   }
 }
 </script>

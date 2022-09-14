@@ -35,20 +35,3 @@
     }
   }
 }
-
-.icon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  background: transparent;
-  padding: 0;
-  border: none;
-  &:hover {
-    cursor: pointer;
-  }
-  &-image {
-    width: 100%;
-    height: auto;
-  }
-}

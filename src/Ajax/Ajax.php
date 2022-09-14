@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Router;
+namespace App\Ajax;
 
-use App\Router\Ajax\AjaxHandlerContainer;
-
-class AjaxRouter
+class Ajax
 {
     public static function run(array $request): string
     {
-        $ajaxContainer = AjaxHandlerContainer::getInstance();
-        if ($handler = $ajaxContainer->get($request["action"])) {
+        if ($handler = AjaxHandlerContainer::getInstance()->get($request["action"])) {
             $result = $handler->run($request);
         } else {
             $result["result"] = false;

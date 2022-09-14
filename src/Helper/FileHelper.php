@@ -8,7 +8,7 @@ class FileHelper
 
     public static function clearTmp(): void
     {
-        $files = glob($_SERVER["DOCUMENT_ROOT"].self::$imagesTmpPath."/*");
+        $files = glob($_SERVER["DOCUMENT_ROOT"] . self::$imagesTmpPath . "/*");
         foreach ($files as $file) {
             unlink($file);
         }
@@ -16,8 +16,8 @@ class FileHelper
 
     public static function getTmpPath(): string
     {
-        if (!file_exists($_SERVER["DOCUMENT_ROOT"].self::$imagesTmpPath)) {
-            mkdir($_SERVER["DOCUMENT_ROOT"].self::$imagesTmpPath);
+        if (!file_exists($_SERVER["DOCUMENT_ROOT"] . self::$imagesTmpPath)) {
+            mkdir($_SERVER["DOCUMENT_ROOT"] . self::$imagesTmpPath);
         }
         return self::$imagesTmpPath;
     }

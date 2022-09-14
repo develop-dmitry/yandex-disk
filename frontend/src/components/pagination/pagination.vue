@@ -1,5 +1,5 @@
 <template>
-  <ul class="pagination">
+  <ul class="pagination" v-if="pages > 1">
     <li class="pagination-item" v-for="index in pages" :key="index">
       <span class="pagination-current" v-if="currentPage === index - 1">
         {{ index }}

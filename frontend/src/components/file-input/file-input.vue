@@ -1,9 +1,11 @@
 <template>
-  <button class="button" @click.prevent="selectFile">{{ fileText }}</button>
-  <input type="file" :id="this.inputId" ref="file" v-on:change="fileUpload()" v-show="false">
+  <button class="button" @click.prevent="openSelectWindow">{{ fileText }}</button>
+  <input type="file"
+         ref="file"
+         :id="this.inputId"
+         v-on:change="selectFile"
+         v-show="false">
 </template>
-
-<style lang="scss" src="./file-input.scss"></style>
 
 <script>
 export default {
@@ -45,11 +47,11 @@ export default {
   ],
 
   methods: {
-    selectFile() {
+    openSelectWindow() {
       document.querySelector("#"+this.inputId).click();
     },
 
-    fileUpload() {
+    selectFile() {
       this.hideMessage();
       if (this.checkFile(this.$refs.file.files[0])) {
         this.file = this.$refs.file.files[0];
@@ -111,6 +113,7 @@ export default {
         this.resetFile();
       }
     },
+
     file: function () {
       this.$emit("select-file", this.file);
     }

@@ -53,8 +53,8 @@ class YandexStorage implements StorageInterface
             return false;
         }
 
-        $path = FileHelper::getTmpPath()."/".$resource->get("name");
-        if ($resource->download($_SERVER["DOCUMENT_ROOT"].$path, true) !== false) {
+        $path = FileHelper::getTmpPath() . "/" . $resource->get("name");
+        if ($resource->download($_SERVER["DOCUMENT_ROOT"] . $path, true) !== false) {
             return $path;
         }
 
@@ -68,7 +68,7 @@ class YandexStorage implements StorageInterface
             return false;
         }
 
-        $newPath = dirname($path)."/".$name;
+        $newPath = dirname($path) . "/" . $name;
         try {
             $resource->move($newPath);
             return $this->getFileArrFromResource($resource);
@@ -79,9 +79,19 @@ class YandexStorage implements StorageInterface
 
     public function getFilesCount(): int
     {
-        return $this->storage->getResources()->count();
+        $count = 0;
+        while (($currentCount = $this->storage->getResources(20, $count)->count()) > 0) {
+            $count += $currentCount;
+        }
+        return $count;
     }
 
+    /**
+     * Получает массив из объекта Closed
+     *
+     * @param Closed $resource
+     * @return array
+     */
     private function getFileArrFromResource(Closed $resource): array
     {
         $file = $resource->toArray();

@@ -1,9 +1,20 @@
 <template>
   <form action="#">
-    <file-input @error="errorHandler" @select-file="selectFile"  :reset="!isUpload" :exclude-extension="['.exe', '.sh']" :input-id="'file'" :max-size="10"></file-input>
-    <button class="button button__margin" v-show="file" @click.prevent="upload" :disabled="isUpload">{{ uploadButtonText }}</button>
+    <file-input @error="errorHandler"
+                @select-file="selectFile"
+                :reset="!isUpload"
+                :exclude-extension="['.exe', '.sh']"
+                :input-id="'file'"
+                :max-size="10"></file-input>
+    <button class="button button__margin"
+            @click.prevent="upload"
+            :disabled="isUpload"
+            v-show="file">
+      {{ uploadButtonText }}
+    </button>
   </form>
 </template>
+
 
 <style lang="scss" src="./file-form.scss"></style>
 

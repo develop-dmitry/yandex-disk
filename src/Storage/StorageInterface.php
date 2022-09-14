@@ -4,15 +4,50 @@ namespace App\Storage;
 
 interface StorageInterface
 {
-    public function getFiles();
+    /**
+     * Получает массив файлов из хранилища
+     *
+     * @return array
+     */
+    public function getFiles(): array;
 
-    public function uploadFile(string $path);
+    /**
+     * Загружает файл в хранилище
+     *
+     * @param string $path
+     * @return array|false
+     */
+    public function uploadFile(string $path): array|false;
 
-    public function deleteFile(string $path);
+    /**
+     * Удаляет файл из хранилища
+     *
+     * @param string $path
+     * @return bool
+     */
+    public function deleteFile(string $path): bool;
 
-    public function downloadFile(string $path);
+    /**
+     * Скачивает файл из хранилища
+     *
+     * @param string $path
+     * @return string|false
+     */
+    public function downloadFile(string $path): string|false;
 
-    public function renameFile(string $path, string $name);
+    /**
+     * Переименовывает файл по указанному пути
+     *
+     * @param string $path
+     * @param string $name
+     * @return array|false
+     */
+    public function renameFile(string $path, string $name): array|false;
 
-    public function getFilesCount();
+    /**
+     * Получает количество файлов в хранилище
+     *
+     * @return int
+     */
+    public function getFilesCount(): int;
 }

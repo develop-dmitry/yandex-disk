@@ -1,28 +1,3 @@
 .files {
   padding: 100px 0;
 }
-
-.alert {
-  padding: 15px;
-  font-size: 16px;
-  width: 100%;
-  border: 1px solid #1571bf;
-  border-radius: 10px;
-  box-sizing: border-box;
-  text-align: center;
-  &__info {
-    background: #1571bf;
-    color: #ffffff;
-  }
-  &__warning {
-    background: #bd1010;
-    color: #ffffff;
-    border-color: #bd1010;
-  }
-  &__margin-bottom {
-    margin-bottom: 30px;
-  }
-  &__margin-top {
-    margin-top: 30px;
-  }
-}

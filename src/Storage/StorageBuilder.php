@@ -3,12 +3,19 @@
 namespace App\Storage;
 
 use App\Helper\EnvHelper;
+use Exception;
 
 class StorageBuilder
 {
     private static StorageInterface $storage;
 
-    public static function getStorage(): StorageInterface|null
+    /**
+     * Получает объект StorageInterface
+     *
+     * @return StorageInterface
+     * @throws Exception
+     */
+    public static function getStorage(): StorageInterface
     {
         if (!isset(self::$storage)) {
             self::createStorage();
@@ -16,16 +23,28 @@ class StorageBuilder
         return self::$storage;
     }
 
+    /**
+     * Создает объект StorageInterface
+     *
+     * @return void
+     * @throws Exception
+     */
     private static function createStorage(): void
     {
-        switch (self::getStorageType()) {
-            case "yandex":
-                self::$storage = new YandexStorage();
-                break;
+        if ($storageType = self::getStorageType()) {
+            self::$storage = match ($storageType) {
+                "yandex" => new YandexStorage(),
+                default => throw new Exception("Не удалось определить тип хранилища"),
+            };
         }
     }
 
-    private static function getStorageType(): string
+    /**
+     * Получает тип хранилища
+     *
+     * @return string|false
+     */
+    private static function getStorageType(): string|false
     {
         return EnvHelper::getInstance()->get("storage_type");
     }

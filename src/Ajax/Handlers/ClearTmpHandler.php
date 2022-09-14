@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Router\Ajax;
+namespace App\Ajax\Handlers;
 
 use App\Helper\FileHelper;
 
-class ClearTmpAjaxHandler implements AjaxHandlerInterface
+class ClearTmpHandler implements HandlerInterface
 {
     public function run(array $params): array
     {
