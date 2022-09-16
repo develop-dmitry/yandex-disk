@@ -1,0 +1,15 @@
+ul.pagination(
+    v-if="pages > 1"
+)
+    li.pagination-item(
+        v-for="index in pages"
+        :key="index"
+    )
+        span.pagination-current(
+            v-if="currentPage === index - 1"
+        ) {{ index }}
+        a.pagination-link(
+            href="#"
+            @click.prevent="this.$emit('select-page', index)"
+            v-else
+        ) {{ index }}

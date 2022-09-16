@@ -1,0 +1,10 @@
+button.button(
+    @click.prevent="openSelectWindow"
+) {{ fileText }}
+input(
+    type="file"
+    ref="file"
+    :id="this.inputId"
+    @change="selectFile"
+    v-show="false"
+)

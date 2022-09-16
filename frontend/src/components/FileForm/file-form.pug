@@ -1,0 +1,16 @@
+form(
+    action="#"
+)
+    FileInput(
+        @error="errorHandler"
+        @select-file="selectFile"
+        :reset="!isUpload"
+        :exclude-extension="['.exe', '.sh']"
+        :input-id="'file'"
+        :max-size="10"
+    )
+    button.button.button__margin(
+        @click.prevent="upload"
+        :disabled="isUpload"
+        v-show="file"
+    ) {{ uploadButtonText }}
