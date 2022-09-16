@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Storage;
+namespace App\Storages;
 
-use App\Helper\EnvHelper;
-use App\Helper\FileHelper;
-use Arhitector\Yandex\Disk\Resource\Closed;
+use App\Helpers\EnvHelper;
+use App\Storages\Interfaces\StorageInterface;
 use Arhitector\Yandex\Disk;
+use Arhitector\Yandex\Disk\Resource\Closed;
 use Exception;
 
 class YandexStorage implements StorageInterface
@@ -46,19 +46,13 @@ class YandexStorage implements StorageInterface
         return $this->storage->getResource($path)->delete(true);
     }
 
-    public function downloadFile(string $path): string|false
+    public function downloadFile(string $path): false|string
     {
         $resource = $this->storage->getResource($path);
-        if (!$resource->has()) {
-            return false;
-        }
-
-        $path = FileHelper::getTmpPath() . "/" . $resource->get("name");
-        if ($resource->download($_SERVER["DOCUMENT_ROOT"] . $path, true) !== false) {
-            return $path;
-        }
-
-        return false;
+        $stream = fopen('php://temp', 'r+b');
+        $resource->download($stream);
+        rewind($stream);
+        return stream_get_contents($stream);
     }
 
     public function renameFile(string $path, string $name): array|false
@@ -84,6 +78,12 @@ class YandexStorage implements StorageInterface
             $count += $currentCount;
         }
         return $count;
+    }
+
+    public function isFileExist(string $path): bool
+    {
+        $resource = $this->storage->getResource($path);
+        return $resource->has();
     }
 
     /**

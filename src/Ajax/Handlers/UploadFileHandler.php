@@ -2,8 +2,9 @@
 
 namespace App\Ajax\Handlers;
 
-use App\Storage\StorageBuilder;
-use \Exception;
+use App\Ajax\Handlers\Interfaces\HandlerInterface;
+use App\Storages\StorageBuilder;
+use Exception;
 
 class UploadFileHandler implements HandlerInterface
 {

@@ -2,7 +2,7 @@
 
 require_once "../vendor/autoload.php";
 
-use App\Helper\EnvHelper;
+use App\Helpers\EnvHelper;
 
 if (!isset($_SERVER['PHP_AUTH_USER'])) {
     header('WWW-Authenticate: Basic');

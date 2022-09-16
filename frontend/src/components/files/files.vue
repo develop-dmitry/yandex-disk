@@ -65,6 +65,7 @@ export default {
           offset: this.offset
         }
       }).then(response => {
+        console.log(response);
         this.items = [];
         if (response.data.result) {
           response.data.items.forEach((value, index) => {

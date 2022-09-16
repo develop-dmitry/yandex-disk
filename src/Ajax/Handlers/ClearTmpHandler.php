@@ -2,7 +2,8 @@
 
 namespace App\Ajax\Handlers;
 
-use App\Helper\FileHelper;
+use App\Ajax\Handlers\Interfaces\HandlerInterface;
+use App\Helpers\FileHelper;
 
 class ClearTmpHandler implements HandlerInterface
 {

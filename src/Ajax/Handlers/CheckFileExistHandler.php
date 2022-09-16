@@ -6,15 +6,16 @@ use App\Ajax\Handlers\Interfaces\HandlerInterface;
 use App\Storages\StorageBuilder;
 use Exception;
 
-class RenameFileHandler implements HandlerInterface
+class CheckFileExistHandler implements HandlerInterface
 {
     public function run(array $params): array
     {
         try {
-            if (isset($params["path"]) && isset($params["name"])) {
-                return ["result" => StorageBuilder::getStorage()->renameFile($params["path"], $params["name"])];
+            $result = ["result" => StorageBuilder::getStorage()->isFileExist($params["path"] ?? "")];
+            if (!$result["result"]) {
+                $result = ["message" => "Файл не найден"];
             }
-            return ["result" => true];
+            return $result;
         } catch (Exception $exception) {
             return [
                 "result" => false,

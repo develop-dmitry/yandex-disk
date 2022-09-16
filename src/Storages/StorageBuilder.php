@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Storage;
+namespace App\Storages;
 
-use App\Helper\EnvHelper;
+use App\Helpers\EnvHelper;
+use App\Storages\Interfaces\StorageInterface;
 use Exception;
 
 class StorageBuilder

@@ -19,6 +19,7 @@ class AjaxHandlerContainer
         $this->addHandler(Handlers\GetFilePagesHandler::class, "get_file_pages");
         $this->addHandler(Handlers\ClearTmpHandler::class, "clear_tmp");
         $this->addHandler(Handlers\RenameFileHandler::class, "rename_file");
+        $this->addHandler(Handlers\CheckFileExistHandler::class, "check_file_exist");
     }
 
     /**
@@ -43,18 +44,19 @@ class AjaxHandlerContainer
      */
     public function addHandler(string $handler, string $name): void
     {
-        if (is_subclass_of($handler, "App\Ajax\Handlers\HandlerInterface")) {
-            $this->handlers[$name] = $handler;
+        if (!is_subclass_of($handler, "App\Ajax\Handlers\Interfaces\HandlerInterface")) {
+            throw new \Exception("Некорректный обработчик запроса");
         }
+        $this->handlers[$name] = $handler;
     }
 
     /**
      * Возвращает объект обработчика
      *
      * @param $name
-     * @return Handlers\HandlerInterface|false
+     * @return \App\Ajax\Handlers\Interfaces\HandlerInterface|false
      */
-    public function get($name): Handlers\HandlerInterface|false
+    public function get($name): Handlers\Interfaces\HandlerInterface|false
     {
         return isset($this->handlers[$name]) ? new $this->handlers[$name]() : false;
     }

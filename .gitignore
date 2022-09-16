@@ -1,4 +1,5 @@
-/frontend/dist
+/frontend/dist/*
+!/frontend/dist/assets
 /.idea
 /frontend/node_modules
 /vendor/

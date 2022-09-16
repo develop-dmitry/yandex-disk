@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ajax\Handlers;
+namespace App\Ajax\Handlers\Interfaces;
 
 interface HandlerInterface
 {

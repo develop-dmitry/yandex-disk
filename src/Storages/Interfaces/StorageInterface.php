@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Storage;
+namespace App\Storages\Interfaces;
 
 interface StorageInterface
 {
@@ -50,4 +50,11 @@ interface StorageInterface
      * @return int
      */
     public function getFilesCount(): int;
+
+    /**
+     * Проверка наличия файла в хранилище
+     *
+     * @return bool
+     */
+    public function isFileExist(string $path): bool;
 }
