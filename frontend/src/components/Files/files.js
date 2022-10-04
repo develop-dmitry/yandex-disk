@@ -19,4 +19,14 @@ export default {
 
         return { filesStore }
     },
+
+    methods: {
+        async selectPage(page) {
+            this.filesStore.setLoading(true);
+
+            await this.filesStore.changePage(page);
+
+            this.filesStore.setLoading(false);
+        }
+    }
 }

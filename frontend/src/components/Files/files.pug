@@ -10,7 +10,7 @@ div.files
             Pagination(
                 :pages="filesStore.pageCount",
                 :current-page="filesStore.currentPage"
-                @select-page="filesStore.changePage"
+                @select-page="selectPage"
             )
             Loader(
                 :isLoading="filesStore.isLoading"
