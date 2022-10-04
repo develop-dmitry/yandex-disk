@@ -2,26 +2,16 @@ div.files
     div.container
         div.files-content
             div.alert.alert__margin-bottom(
-                :class="{'alert__info': !errorMessage, 'alert__warning': errorMessage}"
-                v-if="showMessage"
-            ) {{ message }}
-            FileForm(
-                @file-upload="changeFileCount"
-                @error="errorHandler"
-                @loader="loaderHandler"
-            )
-            FileTable(
-                @file-delete="changeFileCount"
-                @file-rename="getFiles"
-                @error="errorHandler"
-                @loader="loaderHandler"
-                :files="items"
-            )
+                :class="{'alert__info': !filesStore.errorMessage, 'alert__warning': filesStore.errorMessage}"
+                v-if="filesStore.visibleMessage"
+            ) {{ filesStore.message }}
+            FileForm
+            FileTable
             Pagination(
-                :pages="this.pages",
-                :current-page="offset / limit"
-                @select-page="changePage"
+                :pages="filesStore.pageCount",
+                :current-page="filesStore.currentPage"
+                @select-page="filesStore.changePage"
             )
             Loader(
-                :isLoading="isLoading"
+                :isLoading="filesStore.isLoading"
             )

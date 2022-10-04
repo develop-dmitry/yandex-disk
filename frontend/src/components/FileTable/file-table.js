@@ -1,103 +1,121 @@
-import Axios from "axios";
 import EditInput from "../EditInput/EditInput.vue";
+import { useFilesStore } from "../Stores/files-store";
+import {onMounted} from "vue";
 
 export default {
     name: "FileTable",
+
     components: {
         EditInput
     },
-    data: () => {
-        return {
-            downloadLink: "",
-        }
+
+    setup() {
+        const filesStore = useFilesStore();
+
+        onMounted(async () => {
+            filesStore.setLoading(true);
+
+            try {
+                let result = await filesStore.getFiles();
+
+                if (!result.success) {
+                    filesStore.showMessage({
+                        message: result.message
+                    })
+                }
+            } catch (error) {
+                filesStore.showMessage({
+                    message: "Произошла ошибка"
+                })
+            } finally {
+                filesStore.setLoading(false);
+            }
+        })
+
+        return { filesStore }
     },
-    props: {
-        files: Array
-    },
-    emits: [
-        "file-delete",
-        "file-rename",
-        "error",
-        "loader"
-    ],
+
     methods: {
-        deleteFile(file) {
-            this.$emit("loader", true);
-            this.hideMessage();
-            Axios({
-                method: "POST",
-                url: "/ajax.php",
-                params: {
-                    action: "delete_file",
+        async deleteFile(file) {
+            this.filesStore.setLoading(true);
+            this.filesStore.hideMessage();
+
+            try {
+                let result = await this.filesStore.deleteFile({
                     path: file.path
-                }
-            }).then(response => {
-                if (response.data.result) {
-                    this.$emit("file-delete");
-                    this.$emit("error", {
+                })
+
+                if (result.success) {
+                    this.filesStore.showMessage({
                         message: "Файл успешно удален",
-                        error: false
+                        errorMessage: false
                     })
                 } else {
-                    this.$emit("error", {
-                        message: response.data.message,
+                    this.filesStore.showMessage({
+                        message: result.message
                     })
                 }
-                this.$emit("loader", false);
-            })
+            } catch (error) {
+                this.filesStore.showMessage({
+                    message: "Произошла ошибка"
+                })
+            } finally {
+                this.filesStore.setLoading(false);
+            }
         },
 
-        downloadFile(file) {
-            this.$emit("loader", true);
-            this.hideMessage();
-            Axios({
-                method: "POST",
-                url: "/ajax.php",
-                params: {
-                    action: "check_file_exist",
-                    path: file.path
-                }
-            }).then(response => {
-                if (response.data.result) {
-                    window.location.href = "/download.php?path=" + file.path;
+        async downloadFile(file) {
+            this.filesStore.setLoading(true);
+            this.filesStore.hideMessage();
+
+            try {
+                let result = await this.filesStore.checkFileExist({
+                    path: file.path,
+                });
+
+                if (result.success) {
+                    window.location.href = "/download?path=" + file.path;
                 } else {
-                    this.$emit("error", {
-                        message: response.data.message,
+                    this.filesStore.showMessage({
+                        message: result.message
                     })
                 }
-                this.$emit("loader", false);
-            })
+            } catch (error) {
+                this.filesStore.showMessage({
+                    message: "Произошла ошибка"
+                })
+            } finally {
+                this.filesStore.setLoading(false);
+            }
         },
 
-        renameFile(params) {
-            this.$emit("loader", true);
-            this.hideMessage();
-            Axios({
-                method: "POST",
-                url: "/ajax.php",
-                params: {
-                    action: "rename_file",
-                    path: this.files[params.index].path,
+        async renameFile(params) {
+            this.filesStore.setLoading(true);
+            this.filesStore.hideMessage();
+
+            try {
+                let result = await this.filesStore.renameFile({
+                    path: this.filesStore.files[params.index].path,
                     name: params.value
-                }
-            }).then(response => {
-                if (response.data.result) {
-                    this.$emit("error", {
-                        message: "Файл успешно переименован",
-                        error: false
-                    })
-                    this.$emit("file-rename");
-                } else {
-                    this.$emit("error", {
-                        message: "Не удалось переименовать файл"
-                    })
-                }
-                this.$emit("loader", false);
-            })
-        },
+                })
 
-        hideMessage() {
-            this.$emit("error", {show: false});
+                if (result.success) {
+                    this.filesStore.showMessage({
+                        message: "Файл успешно переименован",
+                        errorMessage: false
+                    })
+                } else {
+                    this.filesStore.showMessage({
+                        message: result.message
+                    })
+                }
+            } catch (error) {
+                this.filesStore.showMessage({
+                    message: "Произошла ошибка"
+                })
+            } finally {
+                this.filesStore.setLoading(false);
+            }
         },
     }
 }

@@ -6,7 +6,7 @@ ul.pagination(
         :key="index"
     )
         span.pagination-current(
-            v-if="currentPage === index - 1"
+            v-if="currentPage === index"
         ) {{ index }}
         a.pagination-link(
             href="#"

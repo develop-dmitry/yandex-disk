@@ -1,5 +1,18 @@
+import {useFilesStore} from "../Stores/files-store";
+
 export default {
     name: "FileInput",
+
+    setup() {
+        const filesStore = useFilesStore();
+
+        return {
+            showMessage: filesStore.showMessage,
+            hideMessage: filesStore.hideMessage
+
+        };
+    },
+
     data: () => {
         return {
             file: "",
@@ -16,16 +29,19 @@ export default {
         excludeExtension: {
             type: Array,
         },
+
         maxSize: {
             type: Number,
             default() {
                 return 10;
             }
         },
+
         inputId: {
             type: String,
             required: true
         },
+
         reset: {
             type: Boolean
         }
@@ -43,6 +59,7 @@ export default {
 
         selectFile() {
             this.hideMessage();
+
             if (this.checkFile(this.$refs.file.files[0])) {
                 this.file = this.$refs.file.files[0];
             } else {
@@ -52,16 +69,18 @@ export default {
 
         checkFile(file) {
             if (!this.checkSize(file.size)) {
-                this.$emit("error", {
+                this.showMessage({
                     message: "Загружаемый файл больше " + this.maxSize + " МБ"
                 })
+
                 return false;
             }
 
             if (!this.checkName(file.name)) {
-                this.$emit("error", {
+                this.showMessage({
                     message: "Запрещенное расширение файла"
                 })
+
                 return false;
             }
 
@@ -71,11 +90,13 @@ export default {
         checkName(name) {
             let result = false;
             let extension = name.match(/\.\w+$/i);
+
             if (extension != null) {
                 if (this.excludeExtension.indexOf(extension[0]) === -1) {
                     result = true;
                 }
             }
+
             return result;
         },
 
@@ -90,11 +111,7 @@ export default {
 
         convertByteToMegabyte(byte) {
             return byte / 1024 / 1024;
-        },
-
-        hideMessage() {
-            this.$emit("error", {show: false});
-        },
+        }
     },
 
     watch: {

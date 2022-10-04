@@ -14,13 +14,14 @@ class StorageBuilder
      * Получает объект StorageInterface
      *
      * @return StorageInterface
-     * @throws Exception
+     * @throws StorageBuilderException
      */
     public static function getStorage(): StorageInterface
     {
         if (!isset(self::$storage)) {
             self::createStorage();
         }
+
         return self::$storage;
     }
 
@@ -28,14 +29,14 @@ class StorageBuilder
      * Создает объект StorageInterface
      *
      * @return void
-     * @throws Exception
+     * @throws StorageBuilderException
      */
     private static function createStorage(): void
     {
         if ($storageType = self::getStorageType()) {
             self::$storage = match ($storageType) {
                 "yandex" => new YandexStorage(),
-                default => throw new Exception("Не удалось определить тип хранилища"),
+                default => throw new StorageBuilderException("Не удалось определить тип хранилища"),
             };
         }
     }

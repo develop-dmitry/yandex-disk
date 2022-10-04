@@ -1,12 +1,12 @@
 div.file-table(
-    v-if="files.length > 0"
+    v-if="filesStore.files.length > 0"
 )
     ul.file-table-row.file-table-row__header
         li.file-table-item Название
         li.file-table-item Полный путь
         li.file-table-item Дата создания
     ul.file-table-row(
-        v-for="(file, index) in files"
+        v-for="(file, index) in filesStore.files"
         :key="index"
     )
         li.file-table-item

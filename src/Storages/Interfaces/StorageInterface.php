@@ -9,15 +9,15 @@ interface StorageInterface
      *
      * @return array
      */
-    public function getFiles(): array;
+    public function getFiles(int $limit = 20, int $offset = 0): array;
 
     /**
      * Загружает файл в хранилище
      *
      * @param string $path
-     * @return array|false
+     * @return bool
      */
-    public function uploadFile(string $path): array|false;
+    public function uploadFile(string $path): bool;
 
     /**
      * Удаляет файл из хранилища
@@ -40,9 +40,9 @@ interface StorageInterface
      *
      * @param string $path
      * @param string $name
-     * @return array|false
+     * @return bool
      */
-    public function renameFile(string $path, string $name): array|false;
+    public function renameFile(string $path, string $name): bool;
 
     /**
      * Получает количество файлов в хранилище

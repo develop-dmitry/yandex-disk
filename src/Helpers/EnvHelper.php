@@ -12,6 +12,7 @@ class EnvHelper
     private function __construct()
     {
         $envPath = dirname($_SERVER["DOCUMENT_ROOT"], 1) . "/.env";
+
         $this->dotenv = new Dotenv();
         $this->dotenv->load($envPath);
     }
@@ -26,6 +27,7 @@ class EnvHelper
         if (!isset(self::$helper)) {
             self::$helper = new EnvHelper();
         }
+
         return self::$helper;
     }
 
@@ -40,6 +42,7 @@ class EnvHelper
         if (isset($_ENV[$name])) {
             return $_ENV[$name];
         }
+
         return false;
     }
 }

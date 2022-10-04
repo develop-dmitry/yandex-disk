@@ -1,71 +1,68 @@
-import Axios from "axios";
+import Ajax from "../Helpers/Ajax";
 import FileInput from "../FileInput/FileInput.vue";
+import {useFilesStore} from "../Stores/files-store";
 
 export default {
     name: "FileForm",
+
     components: {
         FileInput
     },
+
+    setup() {
+        const filesStore = useFilesStore();
+
+        return { filesStore }
+    },
+
     data: () => {
         return {
             isUpload: false,
             file: "",
         }
     },
-    emits: [
-        "file-upload",
-        "error",
-        "loader"
-    ],
+
     computed: {
         uploadButtonText: function () {
             return (this.isUpload) ? "Загрузка..." : "Загрузить файл";
         },
     },
+
     methods: {
-        upload() {
-            this.hideMessage();
+        async upload() {
+            this.filesStore.setLoading(true);
+            this.filesStore.hideMessage();
             this.isUpload = true;
-            let formData = new FormData();
-            formData.append("file", this.file);
-            formData.append("action", "upload_file")
-            Axios.post(
-                "/ajax.php",
-                formData,
-                {
-                    'Content-Type': 'multipart/form-data'
-                }
-            ).then(response => {
-                if (response.data.result) {
-                    this.$emit("file-upload");
-                    this.$emit("error", {
+
+            try {
+                let formData = new FormData();
+                formData.append("file", this.file);
+                formData.append("action", "upload_file")
+
+                let result = await this.filesStore.uploadFile(formData);
+
+                if (result.success) {
+                    this.filesStore.showMessage({
                         message: "Файл успешно загружен",
-                        error: false
+                        errorMessage: false
                     })
                 } else {
-                    this.$emit("error", {
-                        message: response.data.message
+                    this.filesStore.showMessage({
+                        message: result.message
                     })
                 }
+            } catch (error) {
+                this.filesStore.showMessage({
+                    message: "Произошла ошибка"
+                })
+            } finally {
+                this.filesStore.setLoading(false);
                 this.isUpload = false;
-            })
+            }
         },
 
         selectFile(file) {
             this.file = file;
         },
-
-        hideMessage() {
-            this.$emit("error", {show: false});
-        },
-
-        errorHandler(params) {
-            this.$emit("error", params);
-        }
     },
-    watch: {
-        isUpload: function () {
-            this.$emit("loader", this.isUpload);
-        }
-    }
 }

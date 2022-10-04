@@ -3,10 +3,12 @@
 namespace App\Storages;
 
 use App\Helpers\EnvHelper;
+use App\Storages\Exceptions\StorageException;
 use App\Storages\Interfaces\StorageInterface;
 use Arhitector\Yandex\Disk;
 use Arhitector\Yandex\Disk\Resource\Closed;
 use Exception;
+use Symfony\Component\Dotenv\Exception\PathException;
 
 class YandexStorage implements StorageInterface
 {
@@ -17,28 +19,36 @@ class YandexStorage implements StorageInterface
      */
     public function __construct()
     {
-        $token = EnvHelper::getInstance()->get("token");
-        if (!$token) {
-            throw new Exception("Не удалось прочитать API токен");
-        }
+        try {
+            $token = EnvHelper::getInstance()->get("token");
 
-        $this->storage = new Disk($token);
+            if (!$token) {
+                throw new StorageException("Не указан API токен");
+            }
+
+            $this->storage = new Disk($token);
+        } catch (PathException $exception) {
+            throw new StorageException("Не найден .env файл");
+        }
     }
 
 
     public function getFiles(int $limit = 20, int $offset = 0): array
     {
         $files = [];
+
         foreach ($this->storage->getResources($limit, $offset)->setSort("created", true) as $resource) {
             $files[] = $this->getFileArrFromResource($resource);
         }
+
         return $files;
     }
 
-    public function uploadFile(string $path): array|false
+    public function uploadFile(string $path): bool
     {
         $resource = $this->storage->getResource(basename($path));
-        return ($resource->upload($path, true)) ? $this->getFileArrFromResource($resource) : false;
+
+        return $resource->upload($path, true);
     }
 
     public function deleteFile(string $path): bool
@@ -48,24 +58,27 @@ class YandexStorage implements StorageInterface
 
     public function downloadFile(string $path): false|string
     {
-        $resource = $this->storage->getResource($path);
         $stream = fopen('php://temp', 'r+b');
+        $resource = $this->storage->getResource($path);
+
         $resource->download($stream);
         rewind($stream);
+
         return stream_get_contents($stream);
     }
 
-    public function renameFile(string $path, string $name): array|false
+    public function renameFile(string $path, string $name): bool
     {
         $resource = $this->storage->getResource($path);
+
         if (!$resource->has()) {
             return false;
         }
 
         $newPath = dirname($path) . "/" . $name;
+
         try {
-            $resource->move($newPath);
-            return $this->getFileArrFromResource($resource);
+            return $resource->move($newPath);
         } catch (Exception $exception) {
             return false;
         }
@@ -74,15 +87,18 @@ class YandexStorage implements StorageInterface
     public function getFilesCount(): int
     {
         $count = 0;
+
         while (($currentCount = $this->storage->getResources(20, $count)->count()) > 0) {
             $count += $currentCount;
         }
+
         return $count;
     }
 
     public function isFileExist(string $path): bool
     {
         $resource = $this->storage->getResource($path);
+
         return $resource->has();
     }
 
@@ -95,6 +111,7 @@ class YandexStorage implements StorageInterface
     private function getFileArrFromResource(Closed $resource): array
     {
         $file = $resource->toArray();
+
         return [
             "name" => $file["name"],
             "path" => $file["path"],
